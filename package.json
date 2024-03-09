@@ -1,0 +1,24 @@
+{
+  "name": "backend-zero",
+  "version": "1.0.0",
+  "description": "hoi Kiong_nguyen",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "nodejs",
+    "nextjs",
+    "reactjs"
+  ],
+  "author": "Kiong_nguyen",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Kiongnguyen/backend-zero.git"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

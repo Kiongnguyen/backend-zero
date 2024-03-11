@@ -1,16 +1,14 @@
 const express = require("express");
 const router = express.Router();
+const {
+  getHomepage,
+  getBooks,
+  getPage404,
+} = require("../controllers/homeController");
 
-router.get("/", (req, res) => {
-  res.send("Hello World! and nodemon");
-});
-
-router.get("/books", (req, res) => {
-  res.send("<h1>List books</h1>");
-});
-
-router.get("/post", (req, res) => {
-  res.render("sample.ejs");
-});
+//router.Method('/router', heandler)
+router.get("/", getHomepage);
+router.get("/books", getBooks);
+router.get("/page404", getPage404);
 
 module.exports = router;

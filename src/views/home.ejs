@@ -10,43 +10,36 @@
     <div class="topnav">
         <a class="active" href="/">Home</a>
         <a href="/create">Create Users</a>
+        <a href="/update">Update A User</a>
+
     </div>
 
    
     <div class="table-container">
         <div class="title">List Users</div>
-
         <table>
             <tr>
               <th>ID</th>
               <th>Email</th>
               <th>Name</th>
               <th>City</th>
+              <th>Actions</th>
             </tr>
-            <tr>
-              <td>Peter</td>
-              <td>Griffin</td>
-              <td>$100</td>
-              <td>$100</td>
-            </tr>
-            <tr>
-              <td>Lois</td>
-              <td>Griffin</td>
-              <td>$150</td>
-              <td>$100</td>
-            </tr>
-            <tr>
-              <td>Joe</td>
-              <td>Swanson</td>
-              <td>$100</td>
-              <td>$300</td>
-            </tr>
-            <tr>
-              <td>Cleveland</td>
-              <td>Brown</td>
-              <td>$100</td>
-              <td>$250</td>
-            </tr>
+
+            <% for (var i = 0; i < listUses.length; i++) { %>
+                <tr>
+                    <td><%=listUses[i].id %></td>
+                    <td><%=listUses[i].email %></td>
+                    <td><%=listUses[i].name %></td>
+                    <td><%=listUses[i].city %></td>
+                    <td>
+                      <a href="/update/<%=listUses[i].id %>">Edit</a>
+                      <button>Delete</button>
+                    </td>
+                  </tr>
+            <% } %>
+
+           
           </table>
     </div>
 

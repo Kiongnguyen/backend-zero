@@ -1,7 +1,9 @@
 const connection = require("../configs/database");
+const { getAllUsers, getUserById } = require("../services/CRUDservices");
 
-const getHomepage = (req, res) => {
-  res.render("home.ejs");
+const getHomepage = async (req, res) => {
+  let results = await getAllUsers();
+  return res.render("home.ejs", { listUses: results });
 };
 
 const getBooks = (req, res) => {
@@ -16,6 +18,12 @@ const getCreate = (req, res) => {
   res.render("create.ejs");
 };
 
+const getUpdate = async (req, res) => {
+  const userId = req.params.id;
+  let user = await getUserById(userId);
+  res.render("update.ejs", { userEdit: user });
+};
+
 const postCreateUser = async (req, res) => {
   let email = req.body.email;
   let name = req.body.name;
@@ -28,9 +36,6 @@ const postCreateUser = async (req, res) => {
   );
   console.log(results);
   res.send("Create user succeed! ");
-
-  // const [results, fields] = await connection.query("SELECT * from Users u");
-  // console.log(">>>resaulst>>>", results);
 };
 
 module.exports = {
@@ -39,4 +44,5 @@ module.exports = {
   getPage404,
   postCreateUser,
   getCreate,
+  getUpdate,
 };

@@ -15,19 +15,25 @@
    
     <div class="table-container">
         <div class="title">List Users</div>
-
+        <%=JSON.stringify(listUses) %>
         <table>
             <tr>
               <th>ID</th>
               <th>Email</th>
               <th>Name</th>
               <th>City</th>
+              <th>Actions</th>
             </tr>
             <tr>
               <td>Peter</td>
               <td>Griffin</td>
               <td>$100</td>
               <td>$100</td>
+              <td>
+                <button>Edit</button>
+                <button>Delete</button>
+              </td>
+
             </tr>
             <tr>
               <td>Lois</td>

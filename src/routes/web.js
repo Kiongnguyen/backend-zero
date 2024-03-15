@@ -6,6 +6,7 @@ const {
   getPage404,
   postCreateUser,
   getCreate,
+  getUpdate,
 } = require("../controllers/homeController");
 
 //router.Method('/router', heandler)
@@ -14,6 +15,7 @@ router.get("/", getHomepage);
 router.get("/books", getBooks);
 router.get("/page404", getPage404);
 router.get("/create", getCreate);
+router.get("/update/:id", getUpdate);
 
 //POST
 

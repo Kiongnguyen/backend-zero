@@ -10,6 +10,8 @@
     <div class="topnav">
         <a class="active" href="/">Home</a>
         <a href="/create">Create Users</a>
+        <a href="/update">Update A User</a>
+
     </div>
 
    
@@ -31,7 +33,7 @@
                     <td><%=listUses[i].name %></td>
                     <td><%=listUses[i].city %></td>
                     <td>
-                      <button>Edit</button>
+                      <a href="/update/<%=listUses[i].id %>">Edit</a>
                       <button>Delete</button>
                     </td>
                   </tr>

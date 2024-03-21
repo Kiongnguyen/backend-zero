@@ -73,3 +73,7 @@
   
   tr:hover {background-color:#ccc;}
 
+  .d_none {
+    display: none;
+  }
+

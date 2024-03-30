@@ -82,3 +82,28 @@
     silence.save();
 ```
 
+> #60 Schema vs Model
+> schema --> quy định hình thù database giống định nghĩa dạng type
+> model --> là công cụ thao tác với database như query, create,update, delete, ....
+> Dùng model thì chúng ta dùng code để thông qua model để thay đổi database chứ khồn sửa chực tiếp trên database
+>
+> #61 Create A User
+>  Cùng nhau sửa lại MongoDB cho User với những giá trị theo email, name, city
+>
+```js
+    const mongoose = require("mongoose");
+
+    const UserSchema = new mongoose.Schema({
+    //_id===uid
+    name: String,
+    email: String,
+    city: String,
+    });
+
+    const User = mongoose.model("User", UserSchema);
+
+    module.exports = User;
+```
+
+> Lưu ý với MongoseDB tạo ra id _id với mã ngẫu nhiên và không trùng nhau không cần khai báo id
+

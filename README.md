@@ -106,4 +106,35 @@
 ```
 
 > Lưu ý với MongoseDB tạo ra id _id với mã ngẫu nhiên và không trùng nhau không cần khai báo id
+>
+> #62 display list users
+>
+> Chủ yếu học đọc dorcument
+> 
+``` ts
+    model.find({})
+```
+
+> #63 Update a User
+> dùng:
+```ts
+    Model.updateOne({condition},{data-update})
+```
+> Exec() --> promise có tác dụng khi xảy ra lỗi 
+
+>#64 Delete a User
+> dùng: Model.deleteOne({condition})
+```ts
+    const postDeleteUser = async (req, res) => {
+    const userId = req.params.id;
+    let user = await User.findById(userId).exec();
+    res.render("delete.ejs", { userEdit: user });
+    };
+    const postHandleRemoveUser = async (req, res) => {
+    const id = req.body.userId;
+
+    await User.deleteOne({ _id: id });
+    res.redirect("/");
+    };
+```
 

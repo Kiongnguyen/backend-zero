@@ -1,21 +1,9 @@
-const connection = require("../configs/database");
-const {
-  getAllUsers,
-  getUserById,
-  updateUserById,
-  CreateNewUser,
-  deleteUserById,
-} = require("../services/CRUDservices");
-
+const { deleteUserById } = require("../services/CRUDservices");
 const User = require("../models/user");
 
 const getHomepage = async (req, res) => {
-  let results = [];
+  let results = await User.find({});
   return res.render("home.ejs", { listUses: results });
-};
-
-const getBooks = (req, res) => {
-  res.send("<h1>List books</h1>");
 };
 
 const getPage404 = (req, res) => {
@@ -28,7 +16,7 @@ const getCreate = (req, res) => {
 
 const getUpdate = async (req, res) => {
   const userId = req.params.id;
-  let user = await getUserById(userId);
+  let user = await User.findById(userId).exec();
   res.render("update.ejs", { userEdit: user });
 };
 
@@ -43,8 +31,7 @@ const postCreateUser = async (req, res) => {
     city: city,
   });
 
-  res.send("Create user succeed! ");
-  // res.redirect("/");
+  res.redirect("/");
 };
 
 const postUpdateUser = async (req, res) => {
@@ -53,27 +40,31 @@ const postUpdateUser = async (req, res) => {
   let city = req.body.city;
   let userId = req.body.userId;
 
-  await updateUserById(email, name, city, userId);
-  // res.send("Update user succeed! ");
+  await User.updateOne(
+    { _id: userId },
+    {
+      email: email,
+      name: name,
+      city: city,
+    }
+  );
   res.redirect("/");
 };
 
 const postDeleteUser = async (req, res) => {
   const userId = req.params.id;
-  let user = await getUserById(userId);
+  let user = await User.findById(userId).exec();
   res.render("delete.ejs", { userEdit: user });
 };
 const postHandleRemoveUser = async (req, res) => {
   const id = req.body.userId;
 
-  await deleteUserById(id);
-  // res.send("Oke deleted! ");
+  await User.deleteOne({ _id: id });
   res.redirect("/");
 };
 
 module.exports = {
   getHomepage,
-  getBooks,
   getPage404,
   postCreateUser,
   getCreate,

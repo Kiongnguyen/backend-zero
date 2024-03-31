@@ -326,3 +326,20 @@ Khi nào sử dụng mỗi loại:
 get user by id
 or
 delete diredtly
+
+>CRUD:
+```js
+    //GET
+    routerAPI.get("/", (req, res) => {res.send(" APIs ");});
+
+    routerAPI.get("/users", getUserAPI);
+
+    //POST
+    routerAPI.post("/users", postCreateUserAPI);
+
+    //PUT
+    routerAPI.put("/users", putUpdateUserAPI);
+
+    //DELETE
+    routerAPI.delete("/users", deleteUserAPI);
+```

@@ -4,6 +4,7 @@ const path = require("path"); //path
 const connection = require("./configs/database");
 const configViewengine = require("./configs/viewengine");
 const webRoutes = require("./routes/web");
+const APIRoutes = require("./routes/api");
 
 const app = express(); //app express
 const port = process.env.PORT || 8080; //port
@@ -18,9 +19,7 @@ app.use(express.urlencoded({ extended: true })); //for from data
 
 //Routes
 app.use("/", webRoutes);
-
-// const silence = new Kitten({ name: "Kiong" });
-// silence.save();
+app.use("/v1/api/", APIRoutes);
 
 //connection
 (async () => {

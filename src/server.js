@@ -6,9 +6,14 @@ const configViewengine = require("./configs/viewengine");
 const webRoutes = require("./routes/web");
 const APIRoutes = require("./routes/api");
 
+const fileUpload = require("express-fileupload");
+
 const app = express(); //app express
 const port = process.env.PORT || 8080; //port
 const hostname = process.env.HOST_NAME;
+
+// default options
+app.use(fileUpload());
 
 //config template engine
 configViewengine(app);

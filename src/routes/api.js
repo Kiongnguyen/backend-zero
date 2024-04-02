@@ -5,6 +5,7 @@ const {
   postCreateUserAPI,
   putUpdateUserAPI,
   deleteUserAPI,
+  postloadsinglefileApi,
 } = require("../controllers/apiController");
 
 //GET
@@ -16,6 +17,7 @@ routerAPI.get("/users", getUserAPI);
 
 //POST
 routerAPI.post("/users", postCreateUserAPI);
+routerAPI.post("/file", postloadsinglefileApi);
 
 //PUT
 routerAPI.put("/users", putUpdateUserAPI);

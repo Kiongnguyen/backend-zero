@@ -343,3 +343,136 @@ delete diredtly
     //DELETE
     routerAPI.delete("/users", deleteUserAPI);
 ```
+## Chapter 8. Project Practices
+> Khởi động dự án thực tập Customer:
+```js
+    const mongoose = require("mongoose");
+
+    const UserSchema = new mongoose.Schema(
+    {
+        name: {
+        type: String,
+        require: true,
+        },
+        address: String,
+        phone: String,
+        email: String,
+        image: String,
+        description: String,
+    },
+    { timestamps: true }
+    );
+
+    const Customer = mongoose.model("User", UserSchema);
+
+    module.exports = Customer;
+
+```
+
+> #82 Giải pháp lưu trữ file với MongoDB
+>  Limit của MongoDB :
+>   - thông thường ở dạng BJON (binary JSON)
+>   - giới hạn là 16MB
+>   - Vì vậy lưu trư file lớn, không thể lưu theo cách thông thường
+> 3 cách làm: 
+>   - Lưu trữ dạng BSON
+>       lưu nguyên file cần lưu vào Database, không cần sử lý nhiều 
+>       tốc độ chậm, không tối ưu, lưu lượng bị giới hạn 
+>   - GridFS
+>       lưu nguyên file cần lưu vào data
+>       phải dùng API trực tiếp của DB
+>   - Lưu trữ không cần dùng database
+>       cách 1: Sử dụng FTP/FTPs mua một máy Sever
+>       cách 2: dùng dịch vụ AWS S3
+> #83 Setup lưu trữ file với Node.js
+> CÁC thư viện để upload file : multer, formidable, busboy, express-fileupload
+>
+> #84,85 API upload files 
+
+- use Form data => to send File
+  ```js
+    const postloadsinglefileApi = async (req, res) => {
+    if (!req.files || Object.keys(req.files).length === 0) {
+        res.status(400).send("No files were uploaded.");
+        return;
+    }
+    if (typeof req.files.image === "object" && Array.isArray(req.files.image)) {
+        let result = await uploadMutlipleFile(req.files.image);
+        console.log(">>>>result:", result);
+    } else {
+        let result = await uploadSingleFile(req.files.image);
+        console.log(">>>>result:", result);
+    }
+    };
+  ```
+- Upload single file:
+  ```ts
+  const path = require("path");
+
+    const uploadSingleFile = async (fileObject) => {
+    const timestamp = Date.now();
+    const extName = path.extname(fileObject.name);
+    const baseName = path.basename(fileObject.name, extName);
+    const fileName = `${baseName}_${timestamp}${extName}`;
+    let uploadPath = path.join(__dirname, "..", "/public/images/", fileName);
+
+    try {
+        fileObject.mv(uploadPath);
+        return {
+        status: "success",
+        fileName: fileName,
+        patch: uploadPath,
+        error: null,
+        };
+    } catch (err) {
+        console.log(">>>error:", err);
+        return {
+        status: "failed",
+        patch: null,
+        error: JSON.stringify(err),
+        };
+    }
+    };
+  ```
+- Upload multiple file:
+  ```js
+    const uploadMutlipleFile = async (fileObjects) => {
+  const timestamp = Date.now();
+
+  try {
+    const uploads = [];
+    for (const fileObject of fileObjects) {
+      const extName = path.extname(fileObject.name);
+      const baseName = path.basename(fileObject.name, extName);
+      const fileName = `${baseName}_${timestamp}${extName}`;
+      let uploadPath = path.join(__dirname, "..", "/public/images/", fileName);
+
+      await fileObject.mv(uploadPath); // Sử dụng await để chờ việc di chuyển file
+
+      uploads.push({
+        fileName: fileName,
+        path: uploadPath,
+      });
+    }
+
+    return {
+      status: "success",
+      uploads: uploads,
+      error: null,
+    };
+  } catch (err) {
+    console.log(">>>error:", err);
+    return {
+      status: "failed",
+      uploads: null,
+      error: JSON.stringify(err),
+    };
+  }
+    };
+
+    module.exports = {
+    uploadSingleFile,
+    uploadMutlipleFile,
+    };
+
+  ```

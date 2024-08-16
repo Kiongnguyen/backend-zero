@@ -470,12 +470,14 @@ const updateUserById = async (email, name, city, userId) => {
 >       - học cách dùng ORM, ...
 >       - muốn sau khoá học này kết hợp với hiểu biết bản thân có thể thay đổi project này theo hướng  Next.js-Nest.js-MongosDB:
 > > Link youtube: [Dự án Booking cera](https://www.youtube.com/playlist?list=PLncHg6Kn2JT734qFpgJeSfFR0mMOklC_3) 
->***THE END - SQL ***
+
 ***
 
 ## Chapter 6. NoSQL - mongoDB
 
->Không nên hỏi tại sao dùng NoSQL và SQL cái này để thời gian cảm nhận nha
+> Git checkout mongodb 
+>
+> Từ chương 6 sẽ làm việc trên nhánh khác để giữ lại giữ liệu cũ bên phần mới sẽ có dữ liệu của phần mới 
 
-> - Moogose là một dạng ODM dùng cho node js: Lợi ích của việc dùng ODM là validate dữ liệu trước khi lưu xuống database Mongo - tức là tạo khái niệm Schema - model
-> - Cài đặt mongoDB compass: 
+***
+***THE END - SQL***

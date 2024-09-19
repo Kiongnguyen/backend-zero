@@ -6,7 +6,7 @@ const {
 
 const getUserAPI = async (req, res) => {
   let results = await User.find({});
-  return res.status(200).json({
+    return res.status(200).json({
     errorCode: 0,
     data: results,
   });
@@ -72,6 +72,8 @@ const postloadsinglefileApi = async (req, res) => {
     console.log(">>>>result:", result);
   }
 };
+
+
 
 module.exports = {
   getUserAPI,

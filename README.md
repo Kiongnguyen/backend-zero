@@ -45,7 +45,7 @@
         //test create connections
     const connection = async () => {
     try {
-        await mongoose.connect("mongodb://root:123456@127.0.0.1:27018");
+        await mongoose.connect("mongodb://root:12345@127.0.0.1:27017");
         const state = Number(mongoose.connection.readyState);
         console.log(dbState.find((f) => f.value == state).label, "to db"); // connected to db
     } catch (error) {
@@ -58,11 +58,11 @@
 >config env for database --> mongoDB
 
 ```
-    DB_HOST=mongodb://localhost:27018
+    DB_HOST=mongodb://localhost:27017
     DB_PORT=3307
     DB_USER=root
-    DB_PASSWORD=123456
-    DB_NAME=hoidanit
+    DB_PASSWORD=12345
+    DB_NAME=mongo_kiong
 ```
 
 >tìm hiểu về self running function: Loại function chạy nội bộ trong chính nó 
@@ -476,3 +476,172 @@ delete diredtly
     };
 
   ```
+
+  > #86 Create a custumer API
+
+  > Chú ý vào 3 file: custumer, custumerSevices, custumerController
+
+  > Custumer tạo ra một cái scherma --> collections - Custumer
+  >
+  >custumerSevices dùng để thêm một custumer giá trị ducoment 
+  ```js
+    const Custumer = require('../models/custumer');
+
+    const createCustumerServies = async (data) => {
+    try {
+        let result = await Custumer.create({
+            name: data.name,
+            address:data.address,
+            phone: data.phone, 
+            email: data.email,
+            description: data.description,
+            image : data.image
+        })
+        return result
+    } catch (error) {
+        console.log(error)
+        return Null
+    }
+    }
+
+    module.exports = {
+        createCustumerServies
+    }
+
+  ```
+  >Sau tiếp tục tạo các custumerController gồm có việc tải file và text
+  >như việc req.body, req.file gửi lên database 
+
+```js
+
+const {
+    uploadSingleFile,
+    uploadMutlipleFile,
+  } = require("../services/fileServices");
+
+const {createCustumerServies} = require('../services/custumerSevices')
+
+module.exports = {
+    postCustumerApi: async (req,res) =>{
+        let {name, address, phone, email, description}=req.body;
+
+        let imgURL='';
+       
+          if (typeof req.files.image === "object" && Array.isArray(req.files.image)) {
+            let result = await uploadMutlipleFile(req.files.image);
+            console.log(">>>>result:", result);
+          } else {
+            let result = await uploadSingleFile(req.files.image);
+            imgURL = result.fileName;
+            console.log(">>>>result:", result.fileName);
+          }
+
+        let custumerData = {
+            name,address, phone, email, description,
+            image : imgURL
+        }
+        
+           let Custumer =  await createCustumerServies(custumerData)
+            return res.status(201).json({
+                errorCode: 0,
+                data: Custumer,
+        })
+    }
+}
+
+```
+> cơ bản khác với cách tạo API thông thường là thêm phần tải file còn lại thì đều giống như vậy , chú ý --> file sẽ được tải lên trên sever thì nó sẽ có một đường link cho mình sau này FE sẽ theo âý mà truy vấn
+> #87 Creat array of customers API
+>
+> Lưu ý: không dùng vòng lặp for, sau đấy dùng hàm create/seva để xử lý trường hợp này, vid hiệu quả không cao. Thay vào đấy dùng insertMany
+> 
+> Tạo Api mới để thêm một lúc nhiều customers
+>
+> #88 Get all custimers APIs
+>
+> #89 Update a customer 
+>
+> #90 soft Delete in Mongodb
+>
+> Tải plugins : [Mongoose Delete Plugin](https://www.npmjs.com/package/mongoose-delete)
+>
+> Lí do tại sao phải sử dụng soft delete là mọi dự liệu không thể xoá khỏi bộ nhớ được ví dụ một trường hợp người dùng không may lỡ tay ấn nhầm thì cần làm gì 
+>
+> Plugins sẽ tạo thêm 1  fiedls để đánh dấu dữ liệu là xoá hay chưa
+>
+> #91 Delete a Customer API
+>
+> Cơ bản là nó sẽ thay đổi trường delete trên sever, nó sẽ dùng 1 lệnh khác là DeleteBy Id và sau đó mình cần override cho tất cả các method
+>
+> #92 Delete array Customer API
+>
+> Tạo static file => có thể dùng ở nhiều nơi mà được thêm vào bởi ngừoi code
+>
+> để xoá nhiều người dùng chung ta dùng 
+```ts
+Customer.delete({_id:{$in:Id}})
+```
+>#93 Query String
+
+>1. Cấu trúc --> với URL: https://example.com/path/page?name=kiong&color=purpule
+thì đoạn **?name=kiong&color=purpule** là query String, nó dùng dấu hỏi để phân cách với patch và dấu & để thêm các biến 
+
+>2. URL encoding --> một số kí tự không viết được trên url sẽ được chuyển thành kí tự đặc biệt vidu: SPACE --> + or "%20"
+
+>#94 Req.qurey
+> 1. Thêm phần query vào router sau dấu ? thêm các fiel và value
+> 2. Lấy dữ liệu từ query string bằng cú pháp : req.query tương tưj như req.body, req.files
+> 3. Sử dụng query string không phát sinh thêm router, tận dụng get/path
+>
+> #95 Req.params
+> 1. Cấu trúc khác khi dùng dấu / để ngăn cách 
+> 2. Khác với query thì params chung ta cần tạo một routes mới 
+> 3. Cách làm này phù hợp với các query động data cà thông tin truyền ít
+>
+> #96 Limit với URL 
+> Giới hạn đường link URl thì sẽ ảnh hưởng đến SEO và nếu cần thì dùng POST
+>
+> #97 Pagination
+>
+> 1. Tại sao cần phân trang: - cơ bản thì cần tới tất cả dữ liệu khi mà nhiều quá thì sẽ làm quá tải khi phân trang sẽ giup tải nhanh hơn
+> 2. Cách sử dụng : 
+>
+> API phân trang thì sẽ cần giới hạn số trang và số lượng tối đa 
+>
+> x keyword limit và offset
+> ở mogodb limit và skip 
+>
+> #98 Tính Toán $limit và $skip
+>
+> Bên FE gửi cho mình limit và page
+>
+> $skip = limit*(page-1)
+>
+> #99 API Phân trang
+>
+> dùng công thức tính toán và đưa vào 2 giá trị trên query là page và limit để chọn phần hiển thị 
+>
+> #100 API filter --> note: regex 
+```ts
+let result = null
+        let offset = limit*(page-1) || 0
+        if (limit && page) {
+            if(name){
+            result = await Customer.find({
+                "name": {$regex: '.*' + name + '.*'}
+            }).skip(offset).limit(limit).exec();}
+            else {
+                result = await Customer.find({}).skip(offset).limit(limit).exec();
+            }
+        } else {
+            result = await Customer.find({});
+        }
+        
+        return result
+```
+>#101,#102 buil query filter:
+
+> 1. Cần tải thư viện [api-query-params](https://www.npmjs.com/package/api-query-params)
+> 2. filter một hoăc nhiều trường 
+
+## Chapter 9. Project Practices
